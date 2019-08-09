@@ -1,0 +1,7 @@
+i {
+    transform: translateY(6px) !important;
+}
+
+.no-translate {
+    transform: translateY(0) !important;
+}

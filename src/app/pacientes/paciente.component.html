@@ -1,0 +1,104 @@
+<div class="main-content animated fadeIn" *ngIf="paciente">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 mb-4">
+        <button class="btn btn-info" (click)="volver()"><i class="material-icons no-translate">keyboard_arrow_left</i>
+          Volver</button>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h5 class="text-primary font-weight-bold"><i class="material-icons">check</i> Nombre: <span class="text-secondary font-weight-light">{{ paciente.nombre }}</span></h5>
+          <h5 class="text-primary font-weight-bold"><i class="material-icons">email</i> Correo: <span class="text-secondary font-weight-light">{{ paciente.email }}</span></h5>
+          <h5 class="text-primary font-weight-bold"><i class="material-icons">date_range</i> Fecha de nacimiento: <span class="text-secondary font-weight-light">{{ paciente.fnacimiento }}</span></h5>
+          <h5 class="text-primary font-weight-bold"><i class="material-icons">phone_iphone</i> Teléfono: <span class="text-secondary font-weight-light">{{ paciente.telefono }}</span></h5>
+          <h5 class="text-primary font-weight-bold"><i class="material-icons">date_range</i> Edad: <span class="text-secondary font-weight-light">{{ paciente.edad }}</span></h5>
+          <h5 class="text-primary font-weight-bold"><i class="material-icons">trending_up</i> Sexo: <span class="text-secondary font-weight-light">{{ paciente.sexo === true ? 'Masculino' : 'Femenino'}}</span></h5>
+          <h5 class="text-primary font-weight-bold"><i class="material-icons">opacity</i> Tipo de sangre: <span class="text-secondary font-weight-light">{{ paciente.tsangre }}</span></h5>
+        </div>
+      </div>
+      <div class="col-md-8 card p-3">
+        <h5 class="text-primary font-weight-bold">Hospital: <span class="text-secondary font-weight-light">{{ paciente.hospital.nombre }}</span></h5>
+        <h5 class="text-primary font-weight-bold">Médico: <span class="text-secondary font-weight-light">{{ paciente.medico.nombre }}</span></h5>
+        <h5 class="text-primary font-weight-bold">Dirección: <span class="text-secondary font-weight-light">{{ paciente.direccion }}</span></h5>
+      </div>
+      <div class="col-md-12 text-right">
+        <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exampleModal">
+          <i class="material-icons no-translate">edit</i> Editar</button>
+        <button class="btn btn-warning" (click)="borrarPaciente(paciente)">
+          <i class="material-icons no-translate">delete</i> Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true" *ngIf="paciente">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="text-primary">{{ paciente.nombre }}</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.nombre" name="nombre" type="text" class="form-control" placeholder="Nombre">
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.email" name="estado" type="text" class="form-control" placeholder="Email">
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.fnacimiento" name="fnacimiento" type="text" class="form-control">
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.telefono" name="telefono" type="text" class="form-control"
+              placeholder="Teléfono">
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.edad" name="edad" type="number" class="form-control">
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.fnacimiento" name="fnacimiento" type="text" class="form-control">
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.telefono" name="telefono" type="tel" class="form-control" placeholder="Teléfono">
+          </div>
+          <div class="custom-control custom-radio" *ngFor="let sexo of sexos; let i = index">
+            <input [(ngModel)]="paciente.sexo" [id]="sexo" type="radio" name="sexo" class="custom-control-input" [value]="sexo"
+              required>
+            <label class="custom-control-label" [for]="sexo">{{ sexo }}</label>
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.tsangre" name="tsangre" type="text" class="form-control" placeholder="Tipo de sangre">
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.direccion" name="direccion" type="text" class="form-control" placeholder="Dirección">
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Asigne un hospital</label>
+            <select (change)="seleccioneHospital($event.target.value)" [(ngModel)]="paciente.hospital" name="hospital"
+              class="form-control" required>
+              <option value="">Seleccione hospital</option>
+              <option *ngFor="let hspt of hospitales" [value]="hspt._id">{{ hspt.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Asigne un médico</label>
+            <select (change)="seleccioneMedico($event.target.value)" [(ngModel)]="paciente.medico" name="medico"
+              class="form-control" required>
+              <option value="">Seleccione médico</option>
+              <option *ngFor="let mdc of filtroMedicos" [value]="mdc._id">{{ mdc.nombre }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button (click)="guardarPaciente(paciente)" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

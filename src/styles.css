@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+a {
+    cursor: pointer !important;
+}
+
+.mat-form-field-underline.ng-tns-c6-2.ng-star-inserted,
+.mat-form-field-underline.ng-tns-c6-1.ng-star-inserted,
+.mat-form-field-subscript-wrapper {
+    display: none !important;
+}
+
+
+.cerrar-modal {
+    display: none !important;
+    padding-right: 0 !important;
+}

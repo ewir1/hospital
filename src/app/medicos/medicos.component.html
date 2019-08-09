@@ -1,0 +1,121 @@
+<div class="main-content animated fadeIn">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title ">Medicos</h4>
+            <p class="card-category"> Listado de medicos registrados</p>
+          </div>
+          <div class="col-md-12 text-right mt-4">
+            <button class="btn btn-success rounded-pill" data-toggle="modal" data-target="#modalMedicos">
+              Crear Médico
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Sexo</th>
+                  <th>Teléfono</th>
+                  <th>Hospital</th>
+                  <th>Pacientes</th>
+                  <th>Ajustes</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let md of arrMedicos | slice:0:5">
+                    <td>
+                      {{ md.medico._id | slice:16:24 }}
+                    </td>
+                    <td class="text-primary">
+                      {{ md.medico.nombre }}
+                    </td>
+                    <td>
+                      {{ md.medico.sexo === true ? 'Masculino' : 'Femenino' }}
+                    </td>
+                    <td>
+                      {{ md.medico.telefono }}
+                    </td>
+                    <td class="text-primary">
+                      {{ md.medico.hospital.nombre }}
+                    </td>
+                    <td class="text-center">
+                      {{ md.pacientes.length }}
+                    </td>
+                    <td>
+                      <button class="btn btn-info btn-sm" (click)="verMedico(md.medico._id)">
+                        <i class="material-icons">add</i>
+                      </button>
+                      <button (click)="borrarMedico(md.medico)" class="btn btn-danger btn-sm">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <button (click)="cambiarDesde(-5)" class="btn btn-danger mr-2">
+                Anteriores
+              </button>
+              <button (click)="cambiarDesde(5)" class="btn btn-danger">
+                Siguientes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade modal-cargado" id="modalMedicos" tabindex="-1" role="dialog" aria-labelledby="modalMedicosLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="text-primary">Crear Médico</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #f="ngForm" (ngSubmit)="crearMedico(f.value)" novalidate="">
+          <div class="form-group">
+            <input [(ngModel)]="medico.nombre" name="nombre" type="text" class="form-control" minlength="4" placeholder="Nombre" required>
+            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="medico.email" name="email" type="text" class="form-control" minlength="6" placeholder="Correo" required>
+            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+          </div>
+          <div class="form-group">
+            <!-- <label for="exampleFormControlSelect1">Asigne un hospital</label> -->
+            <select (change)="cambiarHospital($event.target.value)" [(ngModel)]="medico.hospital" name="hospital" class="form-control">
+              <option value="">Seleccione hospital</option>
+              <option *ngFor="let hospital of hospitales" [value]="hospital._id">{{ hospital.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="medico.telefono" name="telefono" minlength="10" type="text" class="form-control"
+              placeholder="Teléfono" required>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="custom-control custom-radio" *ngFor="let sexo of sexos; let i = index">
+                <input [(ngModel)]="medico.sexo" [id]="sexo" type="radio" name="sexo" class="custom-control-input" [value]="sexo" required>
+                <label class="custom-control-label" [for]="sexo">{{ sexo }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button [disabled]="!f.valid" type="submit" class="btn btn-primary">Crear médico</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

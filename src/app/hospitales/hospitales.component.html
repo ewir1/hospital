@@ -1,0 +1,172 @@
+<div class="main-content animated fadeIn">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header card-header-danger">
+                      <h4 class="card-title ">Hospitales</h4>
+                      <p class="card-category"> Listado de hospitales registrados</p>
+                  </div>
+                  <div class="col-md-12 text-right mt-4">
+                    <button class="btn btn-success rounded-pill" data-toggle="modal" data-target="#exampleModal">
+                        Crear Hospital
+                    </button>
+                  </div>
+                  <div class="card-body">
+                      <div class="table-responsive">
+                          <table class="table">
+                              <thead class=" text-primary">
+                                  <th>ID</th>
+                                  <th>Nombre</th>
+                                  <th>Estado o provincia</th>
+                                  <th>Ciudad</th>
+                                  <th>Medicos</th>
+                                  <th>Pacientes</th>
+                                  <th>Ajustes</th>
+                              </thead>
+                              <tbody>
+                                  <tr *ngFor="let hptl of arrHospitales | slice:0:5">
+                                    <td>{{ hptl.hospital._id | slice:16:24 }}</td>
+                                    <td class="text-primary">{{ hptl.hospital.nombre }}</td>
+                                    <td>{{ hptl.hospital.estado }}</td>
+                                    <td>{{ hptl.hospital.ciudad }}</td>
+                                    <td class="text-primary">{{ hptl.medicos.length }}</td>
+                                    <td>600</td>
+                                    <td>
+                                        <button class="btn btn-info btn-sm" (click)="verHospital(hptl.hospital._id)">
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                        <button (click)="borrarHospital(hptl.hospital)" class="btn btn-danger btn-sm">
+                                            <i class="material-icons">delete</i>
+                                        </button>
+                                    </td>
+                                   </tr>
+                              </tbody>
+                          </table>
+                        <button (click)="cambiarDesde(-5)" class="btn btn-danger mr-2">
+                            Anteriores
+                        </button>
+                        <button (click)="cambiarDesde(5)" class="btn btn-danger">
+                            Siguientes
+                        </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" *ngIf="hospital">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-primary">{{ hospital.nombre }}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="form-group">
+                        <input [(ngModel)]="hospital.nombre" name="nombre" type="text" class="form-control"
+                            placeholder="Nombre">
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+                    <div class="form-group">
+                        <input [(ngModel)]="hospital.estado" name="estado" type="text" class="form-control"
+                            placeholder="Estado">
+                    </div>
+                    <div class="form-group">
+                        <input [(ngModel)]="hospital.ciudad" name="ciudad" type="text" class="form-control"
+                            placeholder="Ciudad">
+                    </div>
+                    <div class="form-group">
+                        <input [(ngModel)]="hospital.telefono" name="telefono" type="text" class="form-control"
+                            placeholder="Teléfono">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="text-muted">Coordenadas para el Mapa</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input [(ngModel)]="hospital.lat" name="lat" type="text" class="form-control"
+                                    placeholder="Latitud">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input [(ngModel)]="hospital.lng" name="lng" type="text" class="form-control"
+                                    placeholder="Longitud">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button (click)="guardarHospital(hospital)" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!-- Modal -->
+<div class="modal fade modal-cargado" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-primary">Crear Hospital</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #f="ngForm" (ngSubmit)="crearHospital(f.value)">
+                    <div class="form-group">
+                        <input [(ngModel)]="hospital.nombre" name="nombre" type="text" class="form-control"
+                            placeholder="Nombre">
+                    </div>
+                    <div class="form-group">
+                        <input [(ngModel)]="hospital.estado" name="estado" type="text" class="form-control"
+                            placeholder="Estado">
+                    </div>
+                    <div class="form-group">
+                        <input [(ngModel)]="hospital.ciudad" name="ciudad" type="text" class="form-control"
+                            placeholder="Ciudad">
+                    </div>
+                    <div class="form-group">
+                        <input [(ngModel)]="hospital.telefono" name="telefono" type="text" class="form-control"
+                            placeholder="Teléfono">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="text-muted">Coordenadas para el Mapa</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input [(ngModel)]="hospital.lat" name="lat" type="text" class="form-control"
+                                    placeholder="Latitud">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input [(ngModel)]="hospital.lng" name="lng" type="text" class="form-control"
+                                    placeholder="Longitud">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Crear hospital</button>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>

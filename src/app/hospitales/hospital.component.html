@@ -1,0 +1,113 @@
+<div class="main-content animated fadeIn" *ngIf="hospital">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 mb-4">
+        <button class="btn btn-info" (click)="volver()"><i class="material-icons">keyboard_arrow_left</i> Volver</button>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-profile">
+          <div class="card-avatar">
+            <a href="" data-toggle="modal" data-target="#modal-image">
+              <img *ngIf="!imagenTemp" class="img img-custom" [src]="hospital.img | imagen:'hospital'" [alt]="hospital.nombre" />
+              <img *ngIf="imagenTemp" class="img" [src]="imagenTemp">
+            </a>
+          </div>
+          <div class="card-body">
+            <h6 class="card-category text-gray">{{ hospital.ciudad }}, {{ hospital.estado }}</h6>
+            <h4 class="card-title text-primary">{{ hospital.nombre }}</h4>
+
+            <h6>Teléfono: <span class="card-category text-gray">{{ hospital.telefono }}</span></h6>
+            <h5 class="card-category">Total de médicos actuales: <span class="text-primary">{{ medicosTotal }}</span></h5>
+          </div>
+        </div>
+        <div class="text-right">
+          <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exampleModal">
+            <i class="material-icons">edit</i> Editar</button>
+          <button class="btn btn-warning" (click)="borrarHospital(hospital._id)">
+            <i class="material-icons">delete</i> Eliminar</button>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div style="height: 340px;" leaflet [leafletOptions]="options" [leafletLayersControl]="layersControl">
+          <!-- <div *ngIf="showLayer" [leafletLayer]="layer"></div>           -->
+        </div>
+        <h3 class="text-primary">{{ hospital.nombre }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true" *ngIf="hospital">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="text-primary">{{ hospital.nombre }}</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <div class="form-group">
+            <input [(ngModel)]="hospital.nombre" name="nombre" type="text" class="form-control" placeholder="Nombre">
+            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="hospital.estado" name="estado" type="text" class="form-control" placeholder="Estado">
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="hospital.ciudad" name="ciudad" type="text" class="form-control" placeholder="Ciudad">
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="hospital.telefono" name="telefono" type="text" class="form-control" placeholder="Teléfono">
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <p class="text-muted">Coordenadas para el Mapa</p>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input [(ngModel)]="hospital.lat" name="lat" type="text" class="form-control" placeholder="Latitud">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input [(ngModel)]="hospital.lng" name="lng" type="text" class="form-control" placeholder="Longitud">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button (click)="guardarHospital(hospital)" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Imagen -->
+<div class="modal fade" id="modal-image" tabindex="-1" role="dialog" aria-labelledby="modal-imageLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-imageLabel">Actualizar Imagen</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img *ngIf="!imagenTemp" [src]="'xxx' | imagen" class="img-fluid">
+        <img *ngIf="imagenTemp" [src]="imagenTemp" class="img-fluid">
+      </div>
+      <input type="file" (change)="seleccionaImagen($event.target.files[0])">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button (click)="subirImagen(hospital._id)" type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,164 @@
+<div class="main-content animated fadeIn">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title ">Pacientes</h4>
+            <p class="card-category"> Listado de pacientes registrados</p>
+          </div>
+          <div class="row mt-4 px-sm-4">
+            <div class="col-md-4">
+              <div class="form-group">
+                <select (change)="seleccionaHospital($event.target.value)" class="form-control" required>
+                  <option value="">Seleccione hospital</option>
+                  <option *ngFor="let hospital of hospitales" [value]="hospital._id">{{ hospital.nombre }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <select (change)="seleccionaMedico($event.target.value)" class="form-control" required>
+                  <option value="">Seleccione médico</option>
+                  <option *ngFor="let medico of medicos" [value]="medico._id">{{ medico.nombre }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4 text-right">
+              <button class="btn btn-success rounded-pill" data-toggle="modal" data-target="#modalPacientes">
+                Crear Paciente
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-info alert-with-icon animated fadeIn" data-notify="container" *ngIf="ocultarTabla">
+              <i class="material-icons" data-notify="icon">add_alert</i>
+              <span data-notify="message">Debe seleccionar un hospital y un medico para obtener los pacientes.</span>
+            </div>
+            <div class="alert alert-warning alert-with-icon animated fadeIn" data-notify="container" *ngIf="sinResultados">
+              <i class="material-icons" data-notify="icon">add_alert</i>
+              <span data-notify="message">Este médico no tiene pacientes asignados.</span>
+            </div>
+          </div>
+          <div class="card-body animated fadeIn" *ngIf="!ocultarTabla && !sinResultados">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Sexo</th>
+                  <th>Teléfono</th>
+                  <th>Correo</th>
+                  <th>Ajustes</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let paciente of pacientes | paginate: { itemsPerPage: 5, currentPage: p }; let i = index">
+                    <td>
+                      {{ paciente._id | slice:16:24 }}
+                    </td>
+                    <td class="text-primary">
+                      {{ paciente.nombre }}
+                    </td>
+                    <td>
+                      {{ paciente.sexo === true ? 'Masculino' : 'Femenino' }}
+                    </td>
+                    <td>
+                      {{ paciente.telefono }}
+                    </td>
+                    <td class="text-primary">
+                      {{ paciente.email }}
+                    </td>
+                    <td>
+                      <button class="btn btn-info btn-sm" (click)="verPaciente(paciente._id)">
+                        <i class="material-icons">add</i>
+                      </button>
+                      <button (click)="borrarPaciente(paciente, i)" class="btn btn-danger btn-sm">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <pagination-controls 
+                      (pageChange)="p = $event" 
+                      previousLabel="Anterior"
+                      nextLabel="Siguiente">
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade modal-cargado" id="modalPacientes" tabindex="-1" role="dialog" aria-labelledby="modalPacientesLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="text-primary">Crear Paciente</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #f="ngForm" (ngSubmit)="crearPaciente(f.value)" novalidate="">
+          <div class="form-group">
+            <input [(ngModel)]="paciente.nombre" name="nombre" type="text" class="form-control" minlength="4"
+              placeholder="Nombre" required>
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.email" name="email" type="text" class="form-control" minlength="6"
+              placeholder="Correo" required>
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.telefono" name="telefono" minlength="10" type="tel" class="form-control"
+              placeholder="Teléfono" required>
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.edad" name="edad" minlength="10" type="number" class="form-control"
+              placeholder="Edad" required>
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.fnacimiento" name="edad" type="date" class="form-control"
+              required>
+          </div>
+          <div class="form-group">
+            <input [(ngModel)]="paciente.tsangre" name="sangre" type="text" class="form-control" placeholder="Tipo de sangre"
+              required>
+          </div>
+          <div class="form-group">
+            <select (change)="selectHospital($event.target.value)" [(ngModel)]="paciente.hospital" name="hospital"
+              class="form-control" required>
+              <option value="">Seleccione hospital</option>
+              <option *ngFor="let hospital of hospitales" [value]="hospital._id">{{ hospital.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select (change)="selectMedico($event.target.value)" [(ngModel)]="paciente.medico" name="medico"
+              class="form-control" required>
+              <option value="">Seleccione médico</option>
+              <option *ngFor="let medico of filtroMedicos" [value]="medico._id">{{ medico.nombre }}</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="custom-control custom-radio" *ngFor="let sexo of sexos; let i = index">
+                <input [(ngModel)]="paciente.sexo" [id]="sexo" type="radio" name="sexo" class="custom-control-input"
+                  [value]="sexo" required>
+                <label class="custom-control-label" [for]="sexo">{{ sexo }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button [disabled]="!f.valid" type="submit" class="btn btn-primary">Crear paciente</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

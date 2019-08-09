@@ -1,0 +1,5 @@
+<div class="main-content animated fadeIn">
+    <div style="height: 450px;" leaflet [leafletOptions]="options">
+        <div *ngFor="let m of markers" [leafletLayer]="m"></div>
+    </div>
+</div>
