@@ -39,7 +39,6 @@ export class BusquedaComponent implements OnInit {
           this.hospitales = resp.hospitales;
           this.medicos = resp.medicos;
           this.pacientes = resp.pacientes;
-          
         });
   }
 
