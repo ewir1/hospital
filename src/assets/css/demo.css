@@ -84,3 +84,7 @@ i.translate {
 .fadeIn {
   animation-name: fadeIn;
 }
+
+.pointer {
+  cursor: pointer;
+}
